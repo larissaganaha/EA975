@@ -82,6 +82,39 @@ router.route('/')
    res.header('Cache-Control', 'no-cache');
    res.sendFile(path, {"root": "./"});
    }
+)
+
+.post(function(req, res) {   // POST (cria)
+     var query = {"username": req.body.username, "password": req.body.password};
+     var response = {};
+     users.findOne(query, function(erro, data) {
+        if (data == null) {
+           var db = new users();
+	   db.username = req.body.username;
+           db.password = req.body.password;
+           db.id = "1";
+           db.orderAmount = 0.0;
+           db.itemsQuantity = 0;
+	   db.order = 0;
+           db.role = "user";
+
+           db.save(function(erro) {
+             if(erro) {
+                 response = {"resultado": "falha de acesso ao BD"};
+                 res.json(response);
+             } else {
+                 response = {"resultado": "usuário inserido"};
+                 res.json(response);
+              }
+            }
+          )
+        } else {
+	    response = {"resultado": "usuário ja existente"};
+            res.json(response);
+          }
+        }
+      )
+    }
  );
 
 // USUÁRIOS

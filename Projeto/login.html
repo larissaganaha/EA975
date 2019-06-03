@@ -28,6 +28,7 @@ app.controller('myCtrl', function($scope, $http) {
                  "method": "post",
                  "url": url,
                  "data": data});
+	print(data);
      request.success(function(reply, status) {
         $scope.result = reply;
         }

@@ -94,8 +94,9 @@ app.controller('myCtrl', function($scope, $http) {
                   "password": $scope.password};
       var request = $http({
                  "method": "post",
-                 "url": "/users",
+                 "url": "/",
                  "data": data});
+	$scope.mensagem = request;
       request.success(function(reply) {
         $scope.mensagem = reply.resultado;
         }
