@@ -118,23 +118,29 @@ router.route('/')
  );
 
 // USUÁRIOS
-router.route('/users')   // operacoes sobre todos os usuários
- .get(function(req, res) {  // GET
-     if(checkAuth(req, res) == 'unauthorized') {
-       res.status(401).send('Unauthorized');
-       return;
+router.route('/signup')   // operacoes sobre todos os usuários
+.get(function(req, res) {  // GET
+     var path = 'signup.html';
+     res.header('Cache-Control', 'no-cache');
+     res.sendFile(path, {"root": "./"});
      }
-     var response = {};
-     users.find({}, function(erro, data) {
-       if(erro)
-          response = {"resultado": "falha de acesso ao BD"};
-       else
-          response = {"users": data};
-        res.json(response);
-        }
-      )
-    }
   )
+ //.get(function(req, res) {  // GET
+ //    if(checkAuth(req, res) == 'unauthorized') {
+ //      res.status(401).send('Unauthorized');
+ //      return;
+ //    }
+ //    var response = {};
+ //    users.find({}, function(erro, data) {
+ //      if(erro)
+ //         response = {"resultado": "falha de acesso ao BD"};
+ //      else
+ //         response = {"users": data};
+ //      res.json(response);
+ //      }
+ //     )
+ //   }
+ // )
   .post(function(req, res) {   // POST (cria)
      if(checkAuth(req, res) != 'admin') {
        res.status(401).send('Unauthorized');
@@ -238,11 +244,11 @@ router.route('/authentication')   // autenticação
 
 
       // verifica usuario e senha na base de dados
-      var query = {"user": user};
+      var query = {"username": user};
       users.findOne(query, function(erro, data) {
 
         if (data != null) {
-            var content =  {"key":"secret", "role":"user"};
+            var content =  {"role":"user"};
 	    res.cookie('userAuth', JSON.stringify(content), {'maxAge': 3600000*24*5});
 	    res.status(200).send('Sucesso');  // OK
         } else {
@@ -263,4 +269,5 @@ router.route('/authentication')   // autenticação
       } 
     }
   );
+
 
