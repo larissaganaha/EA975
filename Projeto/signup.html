@@ -3,7 +3,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <body>
 
-<h1>Cadastro de Usuários</h1>
+<h1>User Signup</h1>
 
 <br>
 
@@ -11,7 +11,7 @@
   <form>
     Username: <input type="text" ng-model="username"><br><br>
     Senha: <input type="password" ng-model="password"><br><br>
-    <button ng-click="insere()">Cadastrar</button> &nbsp;
+    <button ng-click="addUser()">Cadastrar</button> &nbsp;
     <button ng-click="doLogin()">Login</button> &nbsp;
   </form>
 
@@ -36,39 +36,13 @@
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
 
-  // ACESSA
-  $scope.acessa = function() {
-     var url = "/alunos";
-     if ($scope.ra != undefined) url = "/alunos/" + $scope.ra;
-     var request = $http({
-                 "method": "get",
-                 "url": url});
-     request.success(function(reply) {
-        if(reply.alunos != null) {
-          $scope.hra = "RA";
-          $scope.hnome = "Aluno";
-          $scope.hcurso = "Curso";
-          $scope.mensagem = "";
-          $scope.alunos = reply.alunos;
-          } else {
-              $scope.clear();
-              $scope.mensagem = reply.resultado;
-            }
-         }
-      );
-      request.error(function(reply) {
-         alert("Falha na requisicao");
-      }
-    );
-  };
-
   // INSERE
-  $scope.insere = function() {
+  $scope.addUser = function() {
       $scope.clear();
       if ($scope.username == undefined || $scope.username.length == 0 ||
           $scope.password == undefined || $scope.password.length == 0) {
              $scope.clear();
-             $scope.mensagem = "preencha todos os campos acima";
+             $scope.mensagem = "You must fill all the fields above.";
              return;
       }
       var data = {"username": $scope.username,
@@ -77,7 +51,7 @@ app.controller('myCtrl', function($scope, $http) {
                  "method": "post",
                  "url": "/",
                  "data": data});
-	$scope.mensagem = request;
+	    $scope.mensagem = request;
       request.success(function(reply) {
         $scope.mensagem = reply.resultado;
         }
@@ -87,53 +61,6 @@ app.controller('myCtrl', function($scope, $http) {
       }
     );
   };
-
-  // ATUALIZA
-  $scope.atualiza = function(ra) {
-     $scope.clear();
-     if (($scope.nome == undefined || $scope.nome.length == 0) &&
-         ($scope.curso == undefined || $scope.curso.length == 0)) {
-             $scope.clear();
-             $scope.mensagem = "preencha  RA e pelo menos um campo acima";
-             return;
-     }
-     var data = {"ra": ra,
-                 "nome": $scope.nome,
-                 "curso": $scope.curso};
-     var request = $http({
-                 "method": "put",
-                 "url": "/alunos/" + ra,
-                 "data": data});
-     request.success(function(reply) {
-         $scope.mensagem = reply.resultado;
-         }
-      );
-      request.error(function(reply) {
-        alert("Falha na requisicao");
-       }
-    );
-  };
-
-  // REMOVE
-  $scope.remove = function(ra) {
-     $scope.clear();
-     if ($scope.ra == undefined || $scope.ra.length == 0) {
-         $scope.clear();
-         $scope.mensagem = "preencha o RA do aluno";
-         return;
-     }
-     var request = $http({
-                 "method": "delete",
-                 "url": "/alunos/" + ra});
-     request.success(function(reply) {
-         $scope.mensagem = reply.resultado;
-       }
-     );
-     request.error(function(reply) {
-        alert("Falha na requisicao");
-       }
-     );
-   };
 
   // CLEAR
   $scope.clear = function() {

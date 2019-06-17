@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<h2>Dishes management</h2>
+
+<br>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+  <form>
+    Name: <input type="text" ng-model="name"><br><br>
+    Price: <input type="text" ng-model="price"><br><br>
+    Calories: <input type="number" ng-model="calories"><br><br>
+    Nutrition Info: <input type="text" ng-model="nutritionInfo"><br><br>
+    Cusine: <input type="text" ng-model="cusine"><br><br>
+    <button ng-click="addDish()">ADD DISH</button> &nbsp;
+    <button ng-click="insert()">TESTH</button> &nbsp;
+  </form>
+
+    <br><br>
+    Resultado: {{mensagem}}
+    <br><br>
+
+</div>
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  // POST
+  $scope.addDish = function() {
+      $scope.clear();
+      console.log("ENTREI")
+      if ($scope.name == undefined || $scope.name.length == 0 ||
+          $scope.price == undefined || $scope.price.length == 0 ||
+          $scope.calories == undefined || $scope.calories.length == 0 ||
+          $scope.nutritionInfo == undefined || $scope.nutritionInfo.length == 0 ||
+          $scope.cusine == undefined || $scope.cusine.length == 0) {
+             $scope.clear();
+             $scope.mensagem = "You must fill all the fields above.";
+             return;
+      }
+      var data = {"name": $scope.name,
+                  "price": $scope.price,
+                  "calories": $scope.calories,
+                  "nutritionInfo": $scope.nutritionInfo,
+                  "cusine": $scope.cusine};
+      var request = $http({
+                 "method": "post",
+                 "url": "/",
+                 "data": data});
+      $scope.mensagem = request;
+      request.success(function(reply) {
+        $scope.mensagem = reply.resultado;
+        }
+      );
+      request.error(function(reply) {
+        alert("Falha na requisicao");
+      }
+    );
+  };
+
+  $scope.insert = function() {
+    console.log("INSERTTTTTTTTTT")
+  }
+  }
+);
+</script>
+
+</body>
+</html>

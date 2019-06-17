@@ -135,11 +135,51 @@ router.route('/')
 
 router.route('/dishmanager')
 .get(function(req, res) {  // GET
+     console.log("this is a get inside dishManager")
      var path = 'dishmanager.html';
      res.header('Cache-Control', 'no-cache');
      res.sendFile(path, {"root": "./"});
      }
   )
+
+.post(function(req, res) {   // POST (cria)
+     // if(checkAuth(req, res) != 'admin') {
+     //   res.status(401).send('Unauthorized');
+     //   return;
+     // }
+     console.log("this is a post inside dishmanager")
+     var query = {"name": req.body.name};
+     var response = {};
+     dishes.findOne(query, function(erro, data) {
+       console.log("checking if data is null")
+        if (data == null) {
+           console.log("it is")
+           var db = new dishes();
+           db.name = req.body.name;
+           db.price = req.body.price;
+           db.calories = req.body.calories;
+           db.nutritionInfo = req.body.nutritionInfo;
+           db.cusine = req.body.cusine;
+
+           db.save(function(erro) {
+             if(erro) {
+                 response = {"resultado": "falha de acesso ao BD"};
+                 res.json(response);
+             } else {
+                 response = {"resultado": "Dish added"};
+                 res.json(response);
+              }
+            }
+          )
+        } else {
+       console.log("it is not")
+      response = {"resultado": "This dish was previously added"};
+            res.json(response);
+          }
+        }
+      )
+    }
+  );
 
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários
@@ -149,23 +189,8 @@ router.route('/signup')   // operacoes sobre todos os usuários
      res.sendFile(path, {"root": "./"});
      }
   )
- //.get(function(req, res) {  // GET
- //    if(checkAuth(req, res) == 'unauthorized') {
- //      res.status(401).send('Unauthorized');
- //      return;
- //    }
- //    var response = {};
- //    users.find({}, function(erro, data) {
- //      if(erro)
- //         response = {"resultado": "falha de acesso ao BD"};
- //      else
- //         response = {"users": data};
- //      res.json(response);
- //      }
- //     )
- //   }
- // )
-  .post(function(req, res) {   // POST (cria)
+
+.post(function(req, res) {   // POST (cria)
      if(checkAuth(req, res) != 'admin') {
        res.status(401).send('Unauthorized');
        return;
@@ -175,12 +200,12 @@ router.route('/signup')   // operacoes sobre todos os usuários
      users.findOne(query, function(erro, data) {
         if (data == null) {
            var db = new users();
-	   db.username = req.body.username;
+	         db.username = req.body.username;
            db.password = req.body.password;
            db.id = req.body.id;
            db.orderAmount = req.body.orderAmount;
            db.itemsQuantity = req.body.itemsQuantity;
-	   db.order = req.body.order;
+	         db.order = req.body.order;
            db.role = req.body.role;
 
            db.save(function(erro) {
