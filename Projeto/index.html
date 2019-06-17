@@ -12,6 +12,7 @@
   <form>
     <button ng-click="doLogin()">LOGIN</button>&nbsp;&nbsp;
     <button ng-click="acessa()">ACESSA</button>&nbsp;&nbsp;
+    <button ng-click="manageDishes()">GERENCIAR CARDAPIO</button>&nbsp;&nbsp;
     <button ng-click="showSignUp()">CADASTRO</button><br><br>
   </form>
 
@@ -70,6 +71,10 @@ app.controller('myCtrl', function($scope, $http) {
       }
     );
   };
+
+  $scope.manageDishes = function() {
+     window.open("/dishManager", "_blank");
+  }
 
   // INSERE
   $scope.insere = function() {

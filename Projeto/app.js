@@ -132,6 +132,15 @@ router.route('/')
    })
  })
 
+
+router.route('/dishmanager')
+.get(function(req, res) {  // GET
+     var path = 'dishmanager.html';
+     res.header('Cache-Control', 'no-cache');
+     res.sendFile(path, {"root": "./"});
+     }
+  )
+
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários
 .get(function(req, res) {  // GET
