@@ -3,27 +3,29 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <body>
 
-<h1>Cadastro de Usuários</h1>
+<h1>Restaurante EA975</h1>
+<h2>Bem-vind@!</h2>
 
 <br>
 
 <div ng-app="myApp" ng-controller="myCtrl">
   <form>
     <button ng-click="doLogin()">LOGIN</button>&nbsp;&nbsp;
+    <button ng-click="acessa()">ACESSA</button>&nbsp;&nbsp;
     <button ng-click="showSignUp()">CADASTRO</button><br><br>
   </form>
 
   <br><br>
   Resultado: {{mensagem}}
-  
+
   <br><br>
   <table cellspacing="8">
-    <tr> <th>{{husername}}</th>  <th>{{hpassword}}</th>  </tr>
-    <tr ng-repeat="x in alunos">
-      <td>{{ x.username }}</td>
-      <td>{{ x.password }}</td>
-      <td><button ng-click="cadastra(x.username)">Cadastrar</button> &nbsp;
-      <button ng-click="remove(x.username)">REMOVE</button></td>
+    <tr> <th>{{hdishName}}</th>  <th>{{hdishPrice}}</th>  <th>{{hdishCalories}}</th> <th>{{hdishCusine}}</th></tr>
+    <tr ng-repeat="x in dishes">
+      <td>{{ x.name }}</td>
+      <td>{{ x.price }}</td>
+      <td>{{ x.calories }}</td>
+      <td>{{ x.cusine }}</td>
     </tr>
   </table>
 
@@ -37,7 +39,7 @@ app.controller('myCtrl', function($scope, $http) {
   $scope.doLogin = function() {
      window.open("/authentication", "_blank");
   }
-  
+
   // CADASTRO
   $scope.showSignUp = function() {
      window.open("/signup", "_blank");
@@ -45,21 +47,21 @@ app.controller('myCtrl', function($scope, $http) {
 
   // ACESSA
   $scope.acessa = function() {
-     var url = "/alunos";
-     if ($scope.ra != undefined) url = "/alunos/" + $scope.ra;
+     var url = "/dishes";
      var request = $http({
                  "method": "get",
                  "url": url});
      request.success(function(reply) {
-        if(reply.alunos != null) {
-          $scope.hra = "RA";
-          $scope.hnome = "Aluno";
-          $scope.hcurso = "Curso";
+        if(reply.dishes != null) {
+          $scope.hdishName = "Name";
+          $scope.hdishPrice = "Price";
+          $scope.hdishCalories = "Calories";
+          $scope.hdishCusine = "Cusine";
           $scope.mensagem = "";
-          $scope.alunos = reply.alunos;
+          $scope.dishes = reply.dishes;
           } else {
               $scope.clear();
-              $scope.mensagem = reply.resultado;
+              $scope.mensagem = "234890-=df" ;
             }
          }
       );
@@ -150,8 +152,7 @@ app.controller('myCtrl', function($scope, $http) {
     }
   }
 );
-</script> 
+</script>
 
 </body>
 </html>
-

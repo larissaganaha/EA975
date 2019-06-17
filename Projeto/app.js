@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 // adicione "ponteiro" para o MongoDB
 var users = require('./models/users');
 var orders = require('./models/orders');
-var menu = require('./models/dishes');
+var dishes = require('./models/dishes');
 
 // comente as duas linhas abaixo
 // var index = require('./routes/index');
@@ -76,13 +76,13 @@ function checkAuth(req, res) {
 }
 
 // index.html
-router.route('/') 
+router.route('/')
  .get(function(req, res) {  // GET
    var path = 'index.html';
    res.header('Cache-Control', 'no-cache');
    res.sendFile(path, {"root": "./"});
-   }
-)
+ })
+
 
 .post(function(req, res) {   // POST (cria)
      var query = {"username": req.body.username, "password": req.body.password};
@@ -116,6 +116,21 @@ router.route('/')
       )
     }
  );
+
+ router.route('/dishes')
+ .get(function(req,res) {
+   var response = {};
+   dishes.find({}, function(erro, data) {
+     if(erro){
+      console.log("o caraio falhou")
+        response = {"resultado": "falha de acesso ao DB"};
+    } else{
+        console.log("nao deu erro")
+        response = {"dishes": data};
+    }
+    res.json(response)
+   })
+ })
 
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários
@@ -238,7 +253,7 @@ router.route('/authentication')   // autenticação
      res.sendFile(path, {"root": "./"});
      }
   )
-  .post(function(req, res) { 
+  .post(function(req, res) {
       var user = req.body.user;
       var pass = req.body.key;
 
@@ -266,8 +281,6 @@ router.route('/authentication')   // autenticação
       } else {
          res.status(401).send('Unauthorized');
          return;
-      } 
+      }
     }
   );
-
-
