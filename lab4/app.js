@@ -66,17 +66,24 @@ module.exports = app;
 
 function checkAuth(req, res) {
   cookies = req.cookies;
+  console.log("-0");
   if(! cookies || ! cookies.userAuth) return 'unauthorized';
+  console.log("-1");
   cauth = cookies.userAuth;
   var content = JSON.parse(cauth);
+  console.log(content);
   var key = content.key;
+  console.log(key);
   var role = content.role;
+  console.log(role);
   if(key == 'secret') return role
+  console.log("-2");
+  if(role == 'admin') return role
   return 'unauthorized';
 }
 
 // index.html
-router.route('/') 
+router.route('/')
  .get(function(req, res) {  // GET
    var path = 'index.html';
    res.header('Cache-Control', 'no-cache');
@@ -86,10 +93,6 @@ router.route('/')
 
 router.route('/alunos')   // operacoes sobre todos os alunos
  .get(function(req, res) {  // GET
-     if(checkAuth(req, res) == 'unauthorized') {
-       res.status(401).send('Unauthorized');
-       return;
-     }
      var response = {};
      mongoOp.find({}, function(erro, data) {
        if(erro)
@@ -193,22 +196,24 @@ router.route('/authentication')   // autenticação
      res.sendFile(path, {"root": "./"});
      }
   )
-  .post(function(req, res) { 
+  .post(function(req, res) {
+      console.log(JSON.stringify(req.body));
       var user = req.body.user;
-      var pass = req.body.key;
+      var pass = req.body.pass;
 
 
       // verifica usuario e senha na base de dados
-      var query = {"user": user};
+      var query = {"user": user, "key": pass};
+      console.log(JSON.stringify(query));
       mongoOp2.findOne(query, function(erro, data) {
 
         if (data != null) {
-            var content =  {"key":"secret", "role":"user"};
-	    res.cookie('userAuth', JSON.stringify(content), {'maxAge': 3600000*24*5});
+            var content =  data;
+	    res.cookie('userAuth', JSON.stringify(content), {'maxAge': 3600000*24*12});
 	    res.status(200).send('Sucesso');  // OK
         } else {
 	    response = {"resultado": "Usuário e/ou senha inexistentes."};
-	    res.status(401).send('Unauthorized');
+	    res.status(401).send(response);
         }
       }
      )
@@ -221,7 +226,6 @@ router.route('/authentication')   // autenticação
       } else {
          res.status(401).send('Unauthorized');
          return;
-      } 
+      }
     }
   );
-

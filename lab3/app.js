@@ -63,7 +63,7 @@ module.exports = app;
 // HTTP GET, POST, PUT, DELETE
 
 // alguns navegadores enviam uma requisicao OPTIONS antes de POST e PUT
-router.route('/*') 
+router.route('/*')
  .options(function(req, res) {  // OPTIONS
    res.header('Access-Control-Allow-Origin', '*');
    res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE');
@@ -85,7 +85,7 @@ router.route('/alunos')   // operacoes sobre todos os alunos
  .get(function(req, res) {  // GET
      var response = {};
      mongoOp.find({}, function(erro, data) {
-       if(erro) 
+       if(erro)
           response = {"resultado": "falha de acesso ao BD"};
         else
           response = {"alunos": data};
@@ -103,8 +103,8 @@ router.route('/alunos')   // operacoes sobre todos os alunos
            db.ra = req.body.ra;
            db.nome = req.body.nome;
            db.curso = req.body.curso;
-	   db.cp = req.body.cp;
-	   db.cr = req.body.cr;
+	         db.cp = req.body.cp;
+	         db.cr = req.body.cr;
            db.save(function(erro) {
              if(erro) response = {"resultado": "falha de acesso ao BD"};
              else response = {"resultado": "aluno inserido"};
@@ -142,7 +142,7 @@ router.route('/alunos/:ra')   // operacoes sobre um aluno (RA)
           if(erro) response = {"resultado": "falha de acesso ao DB"};
 	  else if (data == null) response = {"resultado": "aluno inexistente"};
           else response = {"resultado": "aluno atualizado"};
-          res.json(response);  
+          res.json(response);
         }
       )
     }
@@ -159,5 +159,3 @@ router.route('/alunos/:ra')   // operacoes sobre um aluno (RA)
        )
      }
   );
-
-
