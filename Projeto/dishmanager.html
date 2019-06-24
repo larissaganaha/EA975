@@ -14,7 +14,9 @@
     Calories: <input type="number" ng-model="calories"><br><br>
     Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>
-    <button ng-click="addDish()">Cadastrar</button> &nbsp;
+    <button ng-click="addDish()">ADD NEW DISH</button> &nbsp;
+    <button ng-click="updateTable()">UPDATE</button> &nbsp;
+
   </form>
 
   <br><br>
@@ -22,11 +24,12 @@
 
   <br><br>
   <table cellspacing="8">
-    <tr> <th>{{husername}}</th>  <th>{{hpassword}}</th>  </tr>
-    <tr ng-repeat="x in alunos">
-      <td>{{ x.username }}</td>
-      <td>{{ x.password }}</td>
-      <td><button ng-click="cadastra(x.username)">Cadastrar</button> &nbsp;
+    <tr> <th>{{hdishName}}</th>  <th>{{hdishPrice}}</th> <th>{{hdishCusine}}</th></tr>
+    <tr ng-repeat="x in dishes">
+      <td>{{ x.name }}</td>
+      <td>{{ x.price }}</td>
+      <td>{{ x.cusine }}</td>
+      <td><button ng-click="cadastra(x.username)">EDIT</button> &nbsp;
       <button ng-click="remove(x.username)">REMOVE</button></td>
     </tr>
   </table>
@@ -61,11 +64,36 @@ app.controller('myCtrl', function($scope, $http) {
                  "data": data});
 	    $scope.mensagem = request;
       request.success(function(reply) {
+        // $scope.dishes = reply.dishes;
         $scope.mensagem = reply.resultado;
-        }
-      );
+      });
       request.error(function(reply) {
         alert("Falha na requisicao");
+      }
+    );
+  };
+
+  $scope.updateTable = function() {
+     var url = "/dishes";
+     var request = $http({
+                 "method": "get",
+                 "url": url});
+     request.success(function(reply) {
+        if(reply.dishes != null) {
+          $scope.hdishName = "Name";
+          $scope.hdishPrice = "Price";
+          $scope.hdishCalories = "Calories";
+          $scope.hdishCusine = "Cusine";
+          $scope.mensagem = "";
+          $scope.dishes = reply.dishes;
+          } else {
+              $scope.clear();
+              $scope.mensagem = "234890-=df" ;
+            }
+         }
+      );
+      request.error(function(reply) {
+         alert("Falha na requisicao");
       }
     );
   };
@@ -78,6 +106,7 @@ app.controller('myCtrl', function($scope, $http) {
     }
   }
 );
+
 </script>
 
 </body>

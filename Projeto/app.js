@@ -122,7 +122,7 @@ router.route('/')
    var response = {};
    dishes.find({}, function(erro, data) {
      if(erro){
-      console.log("o caraio falhou")
+      console.log("failed")
         response = {"resultado": "falha de acesso ao DB"};
     } else{
         console.log("nao deu erro")
@@ -167,10 +167,10 @@ router.route('/dishManager')
 
            db.save(function(erro) {
              if(erro) {
-                 response = {"resultado": "falha de acesso ao BD"};
+                 response = {"resultado": "Failed to access DB"};
                  res.json(response);
              } else {
-                 response = {"resultado": "Dish added"};
+                 response = {"resultado": "Dish added!"};
                  res.json(response);
               }
             }
