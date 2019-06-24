@@ -15,7 +15,6 @@
     Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>
     <button ng-click="addDish()">ADD NEW DISH</button> &nbsp;
-    <button ng-click="updateTable()">UPDATE</button> &nbsp;
 
   </form>
 
@@ -29,8 +28,10 @@
       <td>{{ x.name }}</td>
       <td>{{ x.price }}</td>
       <td>{{ x.cusine }}</td>
-      <td><button ng-click="cadastra(x.username)">EDIT</button> &nbsp;
-      <button ng-click="remove(x.username)">REMOVE</button></td>
+      <td><button ng-click="edit(x.name)">Edit</button> &nbsp;
+      <button ng-click="remove(x)">Remove</button>&nbsp;</td>
+      <button ng-click="updateTable()">Update</button> &nbsp;
+
     </tr>
   </table>
 
@@ -96,6 +97,31 @@ app.controller('myCtrl', function($scope, $http) {
          alert("Falha na requisicao");
       }
     );
+  };
+
+  $scope.remove = function(item) {
+    //alert("Removing: " + item);
+    var data = {"name": item};
+    alert(data);
+    var request = $http({
+               "method": "delete",
+               "url": "/dishManager",
+               "data": data});
+     request.success(function(reply) {
+          $scope.mensagem = reply.resultado;
+      })
+  };
+
+  $scope.edit = function(item) {
+    alert("Editing: " + item);
+    var data = {"name": item};
+    var request = $http({
+               "method": "get",
+               "url": "/editItem",
+               "data": data});
+    request.success(function() {
+
+    })
   };
 
   // CLEAR

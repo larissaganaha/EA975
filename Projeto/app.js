@@ -183,6 +183,20 @@ router.route('/dishManager')
         }
       )
     }
+  )
+  .delete(function(req, res) {   // DELETE (remove)
+    console.log(JSON.stringify(req.body));
+     var response = {};
+     var query = {"name": req.body.name};
+     console.log(query)
+      dishes.findOneAndDelete(query, function(erro, data) {
+         if(erro) response = {"resultado": "falha de acesso ao DB"};
+	       else if (data == null) response = {"resultado": "prato inexistente"};
+         else response = {"resultado": "prato removido"};
+         res.json(response)
+         }
+       )
+     }
   );
 
 // USUÁRIOS
