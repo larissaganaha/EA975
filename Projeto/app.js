@@ -71,7 +71,7 @@ function checkAuth(req, res) {
   var content = JSON.parse(cauth);
   var key = content.key;
   var role = content.role;
-  if(key == 'secret') return role
+  if(role == 'admin') return role
   return 'unauthorized';
 }
 
@@ -133,8 +133,12 @@ router.route('/')
  })
 
 
-router.route('/dishmanager')
+router.route('/dishManager')
 .get(function(req, res) {  // GET
+     // if(checkAuth(req, res) != 'admin') {
+     //   res.status(401).send('Unauthorized');
+     //   return;
+     // }
      console.log("this is a get inside dishManager")
      var path = 'dishmanager.html';
      res.header('Cache-Control', 'no-cache');
@@ -288,16 +292,17 @@ router.route('/authentication')   // autenticação
      }
   )
   .post(function(req, res) {
+      console.log(JSON.stringify(req.body));
       var user = req.body.user;
       var pass = req.body.key;
 
 
       // verifica usuario e senha na base de dados
-      var query = {"username": user};
+      var query = {"username": user, "password": pass};
       users.findOne(query, function(erro, data) {
 
         if (data != null) {
-            var content =  {"role":"user"};
+            var content =  data;
 	    res.cookie('userAuth', JSON.stringify(content), {'maxAge': 3600000*24*5});
 	    res.status(200).send('Sucesso');  // OK
         } else {

@@ -3,24 +3,33 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <body>
 
-<h2>Dishes management</h2>
+<h1>Dish Management</h1>
 
 <br>
 
 <div ng-app="myApp" ng-controller="myCtrl">
   <form>
     Name: <input type="text" ng-model="name"><br><br>
-    Price: <input type="text" ng-model="price"><br><br>
+    Price: <input type="number" ng-model="price"><br><br>
     Calories: <input type="number" ng-model="calories"><br><br>
-    Nutrition Info: <input type="text" ng-model="nutritionInfo"><br><br>
+    Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>
-    <button ng-click="addDish()">ADD DISH</button> &nbsp;
-    <button ng-click="insert()">TESTH</button> &nbsp;
+    <button ng-click="addDish()">Cadastrar</button> &nbsp;
   </form>
 
-    <br><br>
-    Resultado: {{mensagem}}
-    <br><br>
+  <br><br>
+  Resultado: {{mensagem}}
+
+  <br><br>
+  <table cellspacing="8">
+    <tr> <th>{{husername}}</th>  <th>{{hpassword}}</th>  </tr>
+    <tr ng-repeat="x in alunos">
+      <td>{{ x.username }}</td>
+      <td>{{ x.password }}</td>
+      <td><button ng-click="cadastra(x.username)">Cadastrar</button> &nbsp;
+      <button ng-click="remove(x.username)">REMOVE</button></td>
+    </tr>
+  </table>
 
 </div>
 
@@ -28,10 +37,10 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-  // POST
+
+  // INSERE
   $scope.addDish = function() {
       $scope.clear();
-      console.log("ENTREI")
       if ($scope.name == undefined || $scope.name.length == 0 ||
           $scope.price == undefined || $scope.price.length == 0 ||
           $scope.calories == undefined || $scope.calories.length == 0 ||
@@ -48,9 +57,9 @@ app.controller('myCtrl', function($scope, $http) {
                   "cusine": $scope.cusine};
       var request = $http({
                  "method": "post",
-                 "url": "/",
+                 "url": "/dishManager",
                  "data": data});
-      $scope.mensagem = request;
+	    $scope.mensagem = request;
       request.success(function(reply) {
         $scope.mensagem = reply.resultado;
         }
@@ -61,9 +70,12 @@ app.controller('myCtrl', function($scope, $http) {
     );
   };
 
-  $scope.insert = function() {
-    console.log("INSERTTTTTTTTTT")
-  }
+  // CLEAR
+  $scope.clear = function() {
+    $scope.alunos = [];
+    $scope.mensagem = "";
+    $scope.hra = $scope.hnome = $scope.hcurso = "";
+    }
   }
 );
 </script>
