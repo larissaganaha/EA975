@@ -141,7 +141,7 @@ router.route('/dishManager')
      // }
      console.log("this is a get inside dishManager")
      var path = 'dishmanager.html';
-     res.header('Cache-Control', 'no-cache');
+     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
      res.sendFile(path, {"root": "./"});
      }
   )
@@ -184,20 +184,60 @@ router.route('/dishManager')
       )
     }
   )
-  .delete(function(req, res) {   // DELETE (remove)
-    console.log(JSON.stringify(req.body));
-     var response = {};
-     var query = {"name": req.body.name};
-     console.log(query)
-      dishes.findOneAndDelete(query, function(erro, data) {
-         if(erro) response = {"resultado": "falha de acesso ao DB"};
-	       else if (data == null) response = {"resultado": "prato inexistente"};
-         else response = {"resultado": "prato removido"};
-         res.json(response)
-         }
-       )
-     }
+  // .delete(function(req, res) {
+  //   console.log("logging: req.params");
+  //   console.log(JSON.stringify(req.params));
+  //   console.log("logging: req.body");
+  //   console.log(JSON.stringify(req.body));
+  //    var response = {};
+  //    var query = {"name": req.body.name};
+  //    console.log("logging: query");
+  //    console.log(query)
+  //     // dishes.findOneAndDelete(query, function(erro, data) {
+  //     //    if(erro) response = {"resultado": "falha de acesso ao DB"};
+	//     //    else if (data == null) response = {"resultado": "prato inexistente"};
+  //     //    else response = {"resultado": "prato removido"};
+  //     //    res.json(response)
+  //     //    }
+  //     //  )
+  //    }
+  // )
+  .delete(function(req, res) {
+      console.log(JSON.stringify(req.params));
+      console.log(JSON.stringify(req.body));
+      console.log(JSON.stringify(req.data));
+      response = {"resultado": "resposta padrão"};
+      res.json(response);
+    }
+  )
+  .put(function(req, res) {
+      console.log(JSON.stringify(req.body));
+      var response = {};
+      var query = {"name": req.body.name, "price": req.body.curso};
+      mongoOp.findOneAndUpdate(query, data, function(erro, data) {
+          if(erro) response = {"resultado": "falha de acesso ao DB"};
+	  else if (data == null) response = {"resultado": "aluno inexistente"};
+          else response = {"resultado": "aluno atualizado"};
+          res.json(response);
+        }
+      )
+    }
   );
+
+router.route('/dishManager/:dish')
+.delete(function(req, res) {
+    console.log("Removing " + JSON.stringify(req.params));
+    var query = {"name": req.params.dish}
+    var response = {}
+    dishes.findOneAndRemove(query, function(erro, data) {
+      if(erro) response = {"resultado": "falha de acesso ao DB"};
+      else if (data == null) response = {"resultado": "prato inexistente"};
+      else response = {"resultado": "prato removido"};
+      res.json(response)
+      }
+    )
+  }
+);
 
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários

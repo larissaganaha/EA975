@@ -28,9 +28,10 @@
       <td>{{ x.name }}</td>
       <td>{{ x.price }}</td>
       <td>{{ x.cusine }}</td>
-      <td><button ng-click="edit(x.name)">Edit</button> &nbsp;
+      <td><button ng-click="edit(x)">Edit</button> &nbsp;
       <button ng-click="remove(x)">Remove</button>&nbsp;</td>
       <button ng-click="updateTable()">Update</button> &nbsp;
+      <button ng-click="doLogout()">doLogout</button> &nbsp;
 
     </tr>
   </table>
@@ -41,6 +42,17 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
+
+  $scope.doLogout = function() {
+       $scope.clear();
+       var request = $http({
+                   "method": "delete",
+                   "url": "/authentication"});
+       request.success(function(reply) {
+           $scope.mensagem = reply;
+       }
+     );
+   };
 
   // INSERE
   $scope.addDish = function() {
@@ -99,29 +111,47 @@ app.controller('myCtrl', function($scope, $http) {
     );
   };
 
-  $scope.remove = function(item) {
-    //alert("Removing: " + item);
-    var data = {"name": item};
-    alert(data);
+  $scope.edit = function(item) {
+    $scope.clear();
+    alert("not implemented yet!")
+    var data = {"name": item.name,
+                "price": item.price,
+                "cusine": item.cusine};
+    console.log("data:", data)
+    alert(data.name, data.price, data.cusine)
     var request = $http({
-               "method": "delete",
-               "url": "/dishManager",
-               "data": data});
-     request.success(function(reply) {
-          $scope.mensagem = reply.resultado;
-      })
+                "method": "put",
+                "url": "/dishManager",
+                "data": data});
+    request.success(function(reply) {
+         $scope.mensagem = reply.resultado;
+       }
+     );
+     request.error(function(reply) {
+        alert("Falha na requisicao");
+       }
+     );
   };
 
-  $scope.edit = function(item) {
-    alert("Editing: " + item);
-    var data = {"name": item};
+  $scope.remove = function(item) {
+    $scope.clear();
+    var data = {"name": item.name,
+                "price": item.price,
+                "cusine": item.cusine};
+    console.log("data:", data)
+    alert(data.name, data.price, data.cusine)
     var request = $http({
-               "method": "get",
-               "url": "/editItem",
-               "data": data});
-    request.success(function() {
-
-    })
+                "method": "delete",
+                "url": "/dishManager/" + item.name,
+                "data": data});
+    request.success(function(reply) {
+         $scope.mensagem = reply.resultado;
+       }
+     );
+     request.error(function(reply) {
+        alert("Falha na requisicao");
+       }
+     );
   };
 
   // CLEAR
