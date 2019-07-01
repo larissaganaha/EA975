@@ -30,8 +30,7 @@
       <td>{{ x.cusine }}</td>
       <td><button ng-click="edit(x)">Edit</button> &nbsp;
       <button ng-click="remove(x)">Remove</button>&nbsp;</td>
-      <button ng-click="updateTable()">Update</button> &nbsp;
-      <button ng-click="doLogout()">doLogout</button> &nbsp;
+      <button ng-click="updateTable()">Update dish list</button> &nbsp;
 
     </tr>
   </table>
@@ -112,7 +111,11 @@ app.controller('myCtrl', function($scope, $http) {
   };
 
   $scope.edit = function(item) {
-    var data = {"old_name": item.name};
+    var data = {"old_name": item.name,
+                "old price": item.price,
+                "old_calories": item.calories,
+                "old_nutritionInfo": item.nutritionInfo,
+                "old_cusine": item};
     var request = $http({
                 "method": "put",
                 "url": "/dishManager",
@@ -122,7 +125,7 @@ app.controller('myCtrl', function($scope, $http) {
        }
      );
      request.error(function(reply) {
-        alert("OOPS!  Something bad Happened");
+        alert("OOPS! Something bad Happened");
        }
      );
   };

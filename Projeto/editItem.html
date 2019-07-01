@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<h1>Dish Management</h1>
+
+<br>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+  <form>
+    Price: <input type="number" ng-model="price"><br><br>
+    Calories: <input type="number" ng-model="calories"><br><br>
+    Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
+    Cusine: <input type="text" ng-model="cusine"><br><br>
+    <button ng-click="edit()">Save Changes</button> &nbsp;
+
+  </form>
+
+  <br><br>
+
+    </tr>
+  </table>
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+
+  $scope.edit = function() {
+    var data = {"name": $scope.name,
+                "price": $scope.price,
+                "calories": $scope.calories,
+                "nutritionInfo": $scope.nutritionInfo,
+                "cusine": $scope.cusine};
+    var request = $http({
+                "method": "put",
+                "url": "/editItem",
+                "data": data});
+    request.success(function(reply) {
+         alert("Dish successfully updated")
+         window.close()
+       }
+     );
+     request.error(function(reply) {
+        alert(response)
+        window.close()
+       }
+     );
+  };
+}
+);
+
+</script>
+
+</body>
+</html>

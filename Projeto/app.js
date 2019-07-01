@@ -38,7 +38,7 @@ var router = express.Router();
 app.use('/', router);   // deve vir depois de app.use(bodyParser...
 
 var clientCounterId = 0;
-var itemToModify = "";
+var itemToModify = {};
 
 // comente as duas linhas abaixo
 // app.use('/', index);
@@ -213,7 +213,11 @@ router.route('/dishManager')
       console.log("inside put dishmanager handler")
       console.log(JSON.stringify(req.body));
       var response = {};
-      itemToModify = req.body.old_name
+      itemToModify = {"name": req.body.old_name,
+                      "price": req.body.old_price,
+                      "calories": req.body.old_calories,
+                      "nutritionInfo": req.body.old_nutritionInfo,
+                      "cusine": req.body.old_cusine};
       res.json("success");
       }
     );
@@ -247,6 +251,8 @@ router.route('/editItem')
      var path = 'editItem.html';
      res.header("Access-Control-Allow-Methods", "GET, PUT, POST")
      res.sendFile(path, {"root": "./"});
+     console.log(JSON.stringify(itemToModify))
+
      }
   )
 
@@ -255,15 +261,40 @@ router.route('/editItem')
       res.status(401).send('Unauthorized');
       return;
     }
-    console.log("inside put of editItem")
+
+    console.log("inside put of editItem");
     console.log(JSON.stringify(req.body));
     var response = {};
-    var query = {"name": itemToModify};
-    var data = {"name": req.body.name, //TODO: This name should not be null
-                "price": req.body.price,
-                "calories": req.body.calories,
-                "nutritionInfo": req.body.nutritionInfo,
-                "cusine": req.body.cusine};
+    var query = {"name": itemToModify["name"]};
+
+    var price = req.body.price;
+    var calories = req.body.calories;
+    var nutritionInfo = req.body.nutritionInfo;
+    var cusine = req.body.cusine;
+
+    if(price == undefined) {
+      price = itemToModify["price"];
+    }
+    if(calories == undefined) {
+    calories = itemToModify["calories"];
+    }
+    if(nutritionInfo == undefined) {
+      nutritionInfo = itemToModify["nutritionInfo"];
+    }
+    if(cusine == undefined) {
+      cusine = itemToModify["cusine"];
+    }
+
+    var data = { //TODO: This name should not be null
+                "price": price,
+                "calories": calories,
+                "nutritionInfo": nutritionInfo,
+                "cusine": cusine};
+                console.log('-------------------------------------')
+                console.log(data)
+
+    console.log(data)
+
     dishes.findOneAndUpdate(query, data, function(erro, data) {
         if(erro) response = {"resultado": "falha de acesso ao DB"};
         else if (data == null) response = {"resultado": "prato inexistente"};
