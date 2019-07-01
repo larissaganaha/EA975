@@ -12,7 +12,6 @@
     Senha: <input type="password" ng-model="pass"><br><br>
     <button ng-click="doPost()">ENVIA</button><br><br>
   </form>
-    <b>Resultado:</b>&nbsp;{{result}}
 </div>
 
 
@@ -28,13 +27,13 @@ app.controller('myCtrl', function($scope, $http) {
                  "method": "post",
                  "url": url,
                  "data": data});
-	print(data);
      request.success(function(reply, status) {
-        $scope.result = reply;
+        alert("Logged in successfully")
+        window.close()
         }
       );
       request.error(function(reply, status) {
-        $scope.result = reply;
+        alert(reply)
        }
      );
    };

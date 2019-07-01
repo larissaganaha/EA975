@@ -37,6 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 var router = express.Router();
 app.use('/', router);   // deve vir depois de app.use(bodyParser...
 
+var clientCounterId = 0;
+
 // comente as duas linhas abaixo
 // app.use('/', index);
 // app.use('/users', users);
@@ -69,10 +71,13 @@ function checkAuth(req, res) {
   if(! cookies || ! cookies.userAuth) return 'unauthorized';
   cauth = cookies.userAuth;
   var content = JSON.parse(cauth);
+  console.log(content);
   var key = content.key;
   var role = content.role;
+  console.log(role);
   if(role == 'admin') return role
-  return 'unauthorized';
+  console.log('Unauthorized logging')
+  return 'Unauthorized';
 }
 
 // index.html
@@ -90,12 +95,12 @@ router.route('/')
      users.findOne(query, function(erro, data) {
         if (data == null) {
            var db = new users();
-	   db.username = req.body.username;
+	         db.username = req.body.username;
            db.password = req.body.password;
-           db.id = "1";
+           db.id = clientCounterId;
            db.orderAmount = 0.0;
            db.itemsQuantity = 0;
-	   db.order = 0;
+	         db.order = 0;
            db.role = "user";
 
            db.save(function(erro) {
@@ -104,6 +109,7 @@ router.route('/')
                  res.json(response);
              } else {
                  response = {"resultado": "usuário inserido"};
+                 clientCounterId = clientCounterId + 1;
                  res.json(response);
               }
             }
@@ -135,10 +141,10 @@ router.route('/')
 
 router.route('/dishManager')
 .get(function(req, res) {  // GET
-     // if(checkAuth(req, res) != 'admin') {
-     //   res.status(401).send('Unauthorized');
-     //   return;
-     // }
+     if(checkAuth(req, res) != 'admin') {
+       res.status(401).send('Unauthorized');
+       return;
+     }
      console.log("this is a get inside dishManager")
      var path = 'dishmanager.html';
      res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
@@ -151,6 +157,10 @@ router.route('/dishManager')
      //   res.status(401).send('Unauthorized');
      //   return;
      // }
+     if(checkAuth(req, res) != 'admin') {
+       res.status(401).send('Unauthorized');
+       return;
+     }
      console.log("this is a post inside dishmanager")
      var query = {"name": req.body.name};
      var response = {};
@@ -203,6 +213,10 @@ router.route('/dishManager')
   //    }
   // )
   .delete(function(req, res) {
+      if(checkAuth(req, res) != 'admin') {
+        res.status(401).send('Unauthorized');
+        return;
+      }
       console.log(JSON.stringify(req.params));
       console.log(JSON.stringify(req.body));
       console.log(JSON.stringify(req.data));
@@ -211,6 +225,10 @@ router.route('/dishManager')
     }
   )
   .put(function(req, res) {
+      if(checkAuth(req, res) != 'admin') {
+        res.status(401).send('Unauthorized');
+        return;
+      }
       console.log(JSON.stringify(req.body));
       var response = {};
       var query = {"name": req.body.name, "price": req.body.curso};
@@ -226,10 +244,14 @@ router.route('/dishManager')
 
 router.route('/dishManager/:dish')
 .delete(function(req, res) {
+    if(checkAuth(req, res) != 'admin') {
+      res.status(401).send('Unauthorized');
+      return;
+    }
     console.log("Removing " + JSON.stringify(req.params));
     var query = {"name": req.params.dish}
     var response = {}
-    dishes.findOneAndRemove(query, function(erro, data) {
+    dishes.findOneAndDelete(query, function(erro, data) {
       if(erro) response = {"resultado": "falha de acesso ao DB"};
       else if (data == null) response = {"resultado": "prato inexistente"};
       else response = {"resultado": "prato removido"};
@@ -348,7 +370,7 @@ router.route('/authentication')   // autenticação
   .post(function(req, res) {
       console.log(JSON.stringify(req.body));
       var user = req.body.user;
-      var pass = req.body.key;
+      var pass = req.body.pass;
 
 
       // verifica usuario e senha na base de dados

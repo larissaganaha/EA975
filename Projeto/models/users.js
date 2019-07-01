@@ -11,4 +11,3 @@ var userSchema = new Schema({
     "role": String
 });
 module.exports = conn1.model('clients', userSchema);
-

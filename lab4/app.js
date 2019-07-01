@@ -105,6 +105,7 @@ router.route('/alunos')   // operacoes sobre todos os alunos
     }
   )
   .post(function(req, res) {   // POST (cria)
+     console.log(JSON.stringify(req.body));
      if(checkAuth(req, res) != 'admin') {
        res.status(401).send('Unauthorized');
        return;
