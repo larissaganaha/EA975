@@ -38,6 +38,7 @@ var router = express.Router();
 app.use('/', router);   // deve vir depois de app.use(bodyParser...
 
 var clientCounterId = 0;
+var itemToModify = "";
 
 // comente as duas linhas abaixo
 // app.use('/', index);
@@ -75,7 +76,7 @@ function checkAuth(req, res) {
   var key = content.key;
   var role = content.role;
   console.log(role);
-  if(role == 'admin') return role
+  if(role == 'admin' || role == 'user') return role
   console.log('Unauthorized logging')
   return 'Unauthorized';
 }
@@ -153,10 +154,6 @@ router.route('/dishManager')
   )
 
 .post(function(req, res) {   // POST (cria)
-     // if(checkAuth(req, res) != 'admin') {
-     //   res.status(401).send('Unauthorized');
-     //   return;
-     // }
      if(checkAuth(req, res) != 'admin') {
        res.status(401).send('Unauthorized');
        return;
@@ -194,24 +191,7 @@ router.route('/dishManager')
       )
     }
   )
-  // .delete(function(req, res) {
-  //   console.log("logging: req.params");
-  //   console.log(JSON.stringify(req.params));
-  //   console.log("logging: req.body");
-  //   console.log(JSON.stringify(req.body));
-  //    var response = {};
-  //    var query = {"name": req.body.name};
-  //    console.log("logging: query");
-  //    console.log(query)
-  //     // dishes.findOneAndDelete(query, function(erro, data) {
-  //     //    if(erro) response = {"resultado": "falha de acesso ao DB"};
-	//     //    else if (data == null) response = {"resultado": "prato inexistente"};
-  //     //    else response = {"resultado": "prato removido"};
-  //     //    res.json(response)
-  //     //    }
-  //     //  )
-  //    }
-  // )
+
   .delete(function(req, res) {
       if(checkAuth(req, res) != 'admin') {
         res.status(401).send('Unauthorized');
@@ -229,18 +209,14 @@ router.route('/dishManager')
         res.status(401).send('Unauthorized');
         return;
       }
+
+      console.log("inside put dishmanager handler")
       console.log(JSON.stringify(req.body));
       var response = {};
-      var query = {"name": req.body.name, "price": req.body.curso};
-      mongoOp.findOneAndUpdate(query, data, function(erro, data) {
-          if(erro) response = {"resultado": "falha de acesso ao DB"};
-	  else if (data == null) response = {"resultado": "aluno inexistente"};
-          else response = {"resultado": "aluno atualizado"};
-          res.json(response);
-        }
-      )
-    }
-  );
+      itemToModify = req.body.old_name
+      res.json("success");
+      }
+    );
 
 router.route('/dishManager/:dish')
 .delete(function(req, res) {
@@ -256,6 +232,44 @@ router.route('/dishManager/:dish')
       else if (data == null) response = {"resultado": "prato inexistente"};
       else response = {"resultado": "prato removido"};
       res.json(response)
+      }
+    )
+  }
+);
+
+router.route('/editItem')
+
+.get(function(req, res) {  // GET
+     if(checkAuth(req, res) != 'admin') {
+       res.status(401).send('Unauthorized');
+       return;
+     }
+     var path = 'editItem.html';
+     res.header("Access-Control-Allow-Methods", "GET, PUT, POST")
+     res.sendFile(path, {"root": "./"});
+     }
+  )
+
+.put(function(req, res) {
+    if(checkAuth(req, res) != 'admin') {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+    console.log("inside put of editItem")
+    console.log(JSON.stringify(req.body));
+    var response = {};
+    var query = {"name": itemToModify};
+    var data = {"name": req.body.name, //TODO: This name should not be null
+                "price": req.body.price,
+                "calories": req.body.calories,
+                "nutritionInfo": req.body.nutritionInfo,
+                "cusine": req.body.cusine};
+    dishes.findOneAndUpdate(query, data, function(erro, data) {
+        if(erro) response = {"resultado": "falha de acesso ao DB"};
+        else if (data == null) response = {"resultado": "prato inexistente"};
+        else response = {"resultado": "prato atualizado"};
+        console.log(response)
+        res.json(response);
       }
     )
   }

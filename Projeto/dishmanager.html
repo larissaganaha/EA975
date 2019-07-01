@@ -112,23 +112,17 @@ app.controller('myCtrl', function($scope, $http) {
   };
 
   $scope.edit = function(item) {
-    $scope.clear();
-    alert("not implemented yet!")
-    var data = {"name": item.name,
-                "price": item.price,
-                "cusine": item.cusine};
-    console.log("data:", data)
-    alert(data.name, data.price, data.cusine)
+    var data = {"old_name": item.name};
     var request = $http({
                 "method": "put",
                 "url": "/dishManager",
                 "data": data});
     request.success(function(reply) {
-         $scope.mensagem = reply.resultado;
+         window.open("/editItem", "_blank");
        }
      );
      request.error(function(reply) {
-        alert("Falha na requisicao");
+        alert("OOPS!  Something bad Happened");
        }
      );
   };
