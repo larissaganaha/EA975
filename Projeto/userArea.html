@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<h2>Welcome to the user area!</h2>
+
+<h5>In this section, you will be able to register, login and manage your account.</h5>
+
+<br>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+  <button ng-click="doLogin()">LOGIN</button>&nbsp;&nbsp;
+  <button ng-click="showSignUp()">CADASTRO</button><br><br>
+  <br><br>
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  // LOGIN
+  $scope.doLogin = function() {
+     window.open("/authentication", "_blank");
+  }
+
+  // CADASTRO
+  $scope.showSignUp = function() {
+     window.open("/signup", "_blank");
+  };
+}
+);
+
+</script>
+
+</body>
+</html>

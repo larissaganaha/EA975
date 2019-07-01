@@ -10,10 +10,9 @@
 
 <div ng-app="myApp" ng-controller="myCtrl">
   <form>
-    <button ng-click="doLogin()">LOGIN</button>&nbsp;&nbsp;
-    <button ng-click="acessa()">ACESSA</button>&nbsp;&nbsp;
-    <button ng-click="manageDishes()">GERENCIAR CARDAPIO</button>&nbsp;&nbsp;
-    <button ng-click="showSignUp()">CADASTRO</button><br><br>
+    <button ng-click="openUserArea()">User area</button>&nbsp;&nbsp;
+    <button ng-click="acessa()">Show menu</button>&nbsp;&nbsp;
+    <button ng-click="goToRestrictArea()">Restrict access</button>&nbsp;&nbsp;
   </form>
 
   <br><br>
@@ -37,14 +36,13 @@
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-  // LOGIN
-  $scope.doLogin = function() {
-     window.open("/authentication", "_blank");
+
+  $scope.openUserArea = function() {
+    window.open("/userArea", "_blank");
   }
 
-  // CADASTRO
-  $scope.showSignUp = function() {
-     window.open("/signup", "_blank");
+  $scope.goToRestrictArea = function() {
+    window.open("/dishManager", "_blank");
   }
 
   // ACESSA
@@ -73,10 +71,6 @@ app.controller('myCtrl', function($scope, $http) {
       }
     );
   };
-
-  $scope.manageDishes = function() {
-     window.open("/dishManager", "_blank");
-  }
 
   // INSERE
   $scope.insere = function() {

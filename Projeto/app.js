@@ -123,6 +123,18 @@ router.route('/')
       )
     }
  );
+ router.route('/userArea')
+ .get(function(req, res) {  // GET
+      // if(checkAuth(req, res) != 'admin') {
+      //   res.status(401).send('Unauthorized');
+      //   return;
+      // }
+      var path = 'userArea.html';
+      res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
+      res.sendFile(path, {"root": "./"});
+      }
+   )
+
 
  router.route('/dishes')
  .get(function(req,res) {
@@ -289,9 +301,8 @@ router.route('/editItem')
                 "price": price,
                 "calories": calories,
                 "nutritionInfo": nutritionInfo,
-                "cusine": cusine};
-                console.log('-------------------------------------')
-                console.log(data)
+                "cusine": cusine
+              };
 
     console.log(data)
 
@@ -376,8 +387,7 @@ router.route('/users/:id')   // operacoes sobre um usuário (id)
          return;
       }
       var response = {};
-      //var query = {"ra": req.params.ra};
-      //var data = {"nome": req.body.nome, "curso": req.body.curso};
+
       users.findOneAndUpdate(query, data, function(erro, data) {
           if(erro) response = {"resultado": "falha de acesso ao DB"};
 	  else if (data == null) response = {"resultado": "usuário inexistente"};
