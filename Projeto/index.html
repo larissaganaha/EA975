@@ -21,7 +21,7 @@
     <button ng-click="searchByName()">Seach</button>&nbsp;&nbsp;
 <br><br>
     Cusine: <input type="text" ng-model="cusine">
-    <button ng-click="searchByName()">Seach</button>&nbsp;&nbsp;<br><br>
+    <button ng-click="searchByCusine()">Seach</button>&nbsp;&nbsp;<br><br>
 
 
   </form>
@@ -145,7 +145,30 @@ app.controller('myCtrl', function($scope, $http) {
   }
 
   $scope.searchByCusine = function() {
-
+    var data = {"cusine": $scope.cusine};
+    var request = $http({
+                "method": "get",
+                "url": "/filterByCusine/" + data.cusine});
+    alert(data.cusine)
+    request.success(function(reply) {
+      if(reply.dishes != null) {
+        $scope.hdishName = "Name";
+        $scope.hdishPrice = "Price";
+        $scope.hdishCalories = "Calories";
+        $scope.hdishCusine = "Cusine";
+        $scope.hnutritionInfo = "Nutritional info";
+        $scope.mensagem = "";
+        $scope.dishes = reply.dishes;
+        } else {
+            $scope.clear();
+            $scope.mensagem = "234890-=df" ;
+          }
+       }
+     );
+     request.error(function(reply) {
+        alert("OOPS! Something bad Happened");
+       }
+     );
   }
 
   // CLEAR

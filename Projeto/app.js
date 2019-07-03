@@ -140,6 +140,24 @@ router.route('/filterByName/:dish')
   })
 })
 
+
+router.route('/filterByCusine/:dish')
+.get(function(req, res) {
+  var response = {};
+  console.log(req.params)
+  var query = {"cusine": req.params.dish}
+  dishes.find(query, function(erro, data) {
+    if(erro){
+     console.log("failed")
+       response = {"resultado": "falha de acesso ao DB"};
+   } else{
+       console.log("nao deu erro")
+       response = {"dishes": data};
+   }
+   res.json(response)
+  })
+})
+
  router.route('/userArea')
  .get(function(req, res) {  // GET
       // if(checkAuth(req, res) != 'admin') {
