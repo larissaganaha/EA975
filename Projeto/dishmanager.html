@@ -5,14 +5,14 @@
 
 <h2>Dish Management</h2>
 <h5>Add new dishes to your menu filling the fields below. You can also edit and remove items.
-Don't forget to update the dishes list everytime it's changes, to see the modifications.</h5>
+Don't forget to update the dishes list everytime it has changes to see the modifications.</h5>
 
 <br>
 
 <div ng-app="myApp" ng-controller="myCtrl">
   <form>
     Name: <input type="text" ng-model="name"><br><br>
-    Price: <input type="number" ng-model="price"><br><br>
+    Price: <input type="number" min="0" step=".01" ng-model="price"><br><br>
     Calories: <input type="number" ng-model="calories"><br><br>
     Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>
@@ -117,7 +117,7 @@ app.controller('myCtrl', function($scope, $http) {
                 "old price": item.price,
                 "old_calories": item.calories,
                 "old_nutritionInfo": item.nutritionInfo,
-                "old_cusine": item};
+                "old_cusine": item.cusine};
     var request = $http({
                 "method": "put",
                 "url": "/dishManager",

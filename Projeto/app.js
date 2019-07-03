@@ -89,7 +89,6 @@ router.route('/')
    res.sendFile(path, {"root": "./"});
  })
 
-
 .post(function(req, res) {   // POST (cria)
      var query = {"username": req.body.username, "password": req.body.password};
      var response = {};
@@ -123,6 +122,24 @@ router.route('/')
       )
     }
  );
+
+router.route('/filterByName/:dish')
+.get(function(req, res) {
+  var response = {};
+  console.log(req.params)
+  var query = {"name": req.params.dish}
+  dishes.find(query, function(erro, data) {
+    if(erro){
+     console.log("failed")
+       response = {"resultado": "falha de acesso ao DB"};
+   } else{
+       console.log("nao deu erro")
+       response = {"dishes": data};
+   }
+   res.json(response)
+  })
+})
+
  router.route('/userArea')
  .get(function(req, res) {  // GET
       // if(checkAuth(req, res) != 'admin') {
@@ -452,5 +469,27 @@ router.route('/authentication')   // autenticação
          res.status(401).send('Unauthorized');
          return;
       }
+    }
+  );
+
+  router.route('/dishInfo')
+  .get(function(req, res) {  // GET
+     var path = 'dishInfo.html';
+     res.header('Cache-Control', 'no-cache');
+     res.sendFile(path, {"root": "./"});
+     }
+  );
+
+  router.route('/dishInfo/:dish')
+  .get(function(req, res) {
+      var query = {"name": req.params.dish}
+      var response = {}
+      dishes.findOne(query, function(erro, data) {
+        if(erro) response = {"resultado": "falha de acesso ao DB"};
+        else if (data == null) response = {"resultado": "prato inexistente"};
+        else response = data
+        res.json(response)
+        }
+      )
     }
   );

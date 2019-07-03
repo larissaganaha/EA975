@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+
+<br>
+<div ng-app="myApp" ng-controller="myCtrl">
+  <h2>{{name}}</h2>
+
+  <form>
+
+    <button ng-click="doPost()">ENVIA</button><br><br>
+  </form>
+</div>
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http, dishService) {
+  $scope.name = "LALA";
+  // POST
+  $scope.doPost = function() {
+     alert("oi");
+   };
+  }
+);
+</script>
+
+</body>
+</html>

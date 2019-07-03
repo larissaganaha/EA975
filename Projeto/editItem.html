@@ -9,7 +9,7 @@
 
 <div ng-app="myApp" ng-controller="myCtrl">
   <form>
-    Price: <input type="number" ng-model="price"><br><br>
+    Price: <input type="number" min="0" step=".01" ng-model="price"><br><br>
     Calories: <input type="number" ng-model="calories"><br><br>
     Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>

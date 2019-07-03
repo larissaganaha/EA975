@@ -15,6 +15,17 @@
     <button ng-click="goToRestrictArea()">Restrict access</button>&nbsp;&nbsp;
   </form>
 
+  <h2>Filtros</h2>
+  <form>
+    Name: <input type="text" ng-model="name">
+    <button ng-click="searchByName()">Seach</button>&nbsp;&nbsp;
+<br><br>
+    Cusine: <input type="text" ng-model="cusine">
+    <button ng-click="searchByName()">Seach</button>&nbsp;&nbsp;<br><br>
+
+
+  </form>
+
   <br><br>
   Resultado: {{mensagem}}
 
@@ -24,9 +35,8 @@
     <tr ng-repeat="x in dishes">
       <td>{{ x.name }}</td>
       <td>{{ x.price }}</td>
-      <td>{{ x.calories }}</td>
-      <td>{{ x.cusine }}</td>
-      <td>{{ x.nutritionInfo }}</td>
+      <td><button ng-click="order(x)">Order</button> &nbsp;
+      <button ng-click="info(x)">Info</button>&nbsp;</td>
     </tr>
   </table>
 
@@ -35,6 +45,23 @@
 
 <script>
 var app = angular.module('myApp', []);
+app.factory('dishService', function() {
+  var savedData = {}
+
+  function set(data){
+    savedData = data;
+  }
+
+  function get(){
+    return savedData
+  }
+
+  return {
+    set: set,
+    get: get
+  }
+})
+
 app.controller('myCtrl', function($scope, $http) {
 
   $scope.openUserArea = function() {
@@ -72,78 +99,54 @@ app.controller('myCtrl', function($scope, $http) {
     );
   };
 
-  // INSERE
-  $scope.insere = function() {
-      $scope.clear();
-      if ($scope.username == undefined || $scope.username.length == 0 ||
-          $scope.password == undefined || $scope.password.length == 0) {
-             $scope.clear();
-             $scope.mensagem = "preencha todos os campos acima";
-             return;
-      }
-      var data = {"username": $scope.username,
-                  "password": $scope.password};
-      var request = $http({
-                 "method": "post",
-                 "url": "/",
-                 "data": data});
-	$scope.mensagem = request;
-      request.success(function(reply) {
-        $scope.mensagem = reply.resultado;
-        }
-      );
-      request.error(function(reply) {
-        alert("Falha na requisicao");
-      }
-    );
-  };
-
-  // ATUALIZA
-  $scope.atualiza = function(ra) {
-     $scope.clear();
-     if (($scope.nome == undefined || $scope.nome.length == 0) &&
-         ($scope.curso == undefined || $scope.curso.length == 0)) {
-             $scope.clear();
-             $scope.mensagem = "preencha  RA e pelo menos um campo acima";
-             return;
-     }
-     var data = {"ra": ra,
-                 "nome": $scope.nome,
-                 "curso": $scope.curso};
-     var request = $http({
-                 "method": "put",
-                 "url": "/alunos/" + ra,
-                 "data": data});
-     request.success(function(reply) {
-         $scope.mensagem = reply.resultado;
-         }
-      );
-      request.error(function(reply) {
-        alert("Falha na requisicao");
-       }
-    );
-  };
-
-  // REMOVE
-  $scope.remove = function(ra) {
-     $scope.clear();
-     if ($scope.ra == undefined || $scope.ra.length == 0) {
-         $scope.clear();
-         $scope.mensagem = "preencha o RA do aluno";
-         return;
-     }
-     var request = $http({
-                 "method": "delete",
-                 "url": "/alunos/" + ra});
-     request.success(function(reply) {
-         $scope.mensagem = reply.resultado;
+  $scope.info = function(item) {
+    var data = {"name": item.name};
+    var request = $http({
+                "method": "get",
+                "url": "/dishInfo/" + item.name,
+                "data": data});
+    request.success(function(reply) {
+         dishService.set(reply);
+         alert(dishService.get().name)
+         window.open("/dishInfo", "_blank")
        }
      );
      request.error(function(reply) {
-        alert("Falha na requisicao");
+        alert("OOPS! Something bad Happened");
        }
      );
-   };
+  };
+
+  $scope.searchByName = function() {
+    var data = {"name": $scope.name};
+    var request = $http({
+                "method": "get",
+                "url": "/filterByName/" + data.name});
+    alert(data.name)
+    request.success(function(reply) {
+      if(reply.dishes != null) {
+        $scope.hdishName = "Name";
+        $scope.hdishPrice = "Price";
+        $scope.hdishCalories = "Calories";
+        $scope.hdishCusine = "Cusine";
+        $scope.hnutritionInfo = "Nutritional info";
+        $scope.mensagem = "";
+        $scope.dishes = reply.dishes;
+        } else {
+            $scope.clear();
+            $scope.mensagem = "234890-=df" ;
+          }
+       }
+     );
+     request.error(function(reply) {
+        alert("OOPS! Something bad Happened");
+       }
+     );
+  }
+
+  $scope.searchByCusine = function() {
+
+  }
 
   // CLEAR
   $scope.clear = function() {
