@@ -367,41 +367,39 @@ router.route('/editItem')
 
 router.route('/orders')
 .post(function(req, res) {   // POST (cria)
-     // if(checkAuth(req, res) != 'user') {
-     //   res.status(401).send('Unauthorized');
-     //   return;
-     // }
-     // var query = {"userID": req.body.id};
-     // var response = {};
-     // users.findOne(query, function(erro, data) {
-     //    if (data == null) {
-     //       var db = new users();
-	   //       db.username = req.body.username;
-     //       db.password = req.body.password;
-     //       db.id = req.body.id;
-     //       db.orderAmount = req.body.orderAmount;
-     //       db.itemsQuantity = req.body.itemsQuantity;
-	   //       db.order = req.body.order;
-     //       db.role = req.body.role;
-     //
-     //       db.save(function(erro) {
-     //         if(erro) {
-     //             response = {"resultado": "falha de acesso ao BD"};
-     //             res.json(response);
-     //         } else {
-     //             response = {"resultado": "usuário inserido"};
-     //             res.json(response);
-     //          }
-     //        }
-     //      )
-     //    } else {
-	   //  response = {"resultado": "usuário ja existente"};
-     //        res.json(response);
-     //      }
-     //    }
-     //  )
+     console.log("---------------------------------")
+     console.log(req.body)
+     if(checkAuth(req, res) != 'admin') {
+       res.status(401).send('Unauthorized');
+       return;
+     }
+     var query = {"name": req.body.name}
+     var response = {};
+     orders.findOne(query, function(erro, data) {
+        if (data == null) {
+          var db = new orders();
+           db.dish = req.body.name;
+           db.quantity = 1;
+
+           db.save(function(erro) {
+             if(erro) {
+                 response = {"resultado": "falha de acesso ao BD"};
+                 res.json(response);
+             } else {
+                 response = {"resultado": "usuário inserido"};
+                 res.json(response);
+              }
+            }
+          )
+        } else {
+      response = {"resultado": "usuário ja existente"};
+            res.json(response);
+          }
+        }
+      )
     }
   );
+
 
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários

@@ -116,6 +116,19 @@ app.controller('myCtrl', function($scope, $http) {
   };
 
   $scope.order = function(item) {
+    var data = {"name": item.name}
+    var request = $http({
+                    "method": "post",
+                    "url": "/orders",
+                    "data": data
+                  });
+
+    request.success(function(reply){
+      alert("Order made!")
+    });
+    request.error(function(reply) {
+      alert("OOPS! Something bad Happened");
+    })
 
     // var data = {"name": item.name};
     // var request = $http({
