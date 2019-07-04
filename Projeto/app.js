@@ -365,6 +365,22 @@ router.route('/editItem')
   }
 );
 
+// PEDIDOS
+router.route('/ordersList')
+.get(function(req,res) {
+  var response = {};
+  orders.find({}, function(erro, data) {
+    if(erro){
+     console.log("failed")
+       response = {"resultado": "falha de acesso ao DB"};
+   } else{
+       console.log("nao deu erro")
+       response = {"orders": data};
+   }
+   res.json(response)
+  })
+})
+
 router.route('/orders')
 .post(function(req, res) {   // POST (cria)
      console.log("---------------------------------")
@@ -399,7 +415,6 @@ router.route('/orders')
       )
     }
   );
-
 
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários

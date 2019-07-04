@@ -7,9 +7,10 @@
 <h5>Add new dishes to your menu filling the fields below. You can also edit and remove items.
 Don't forget to update the dishes list everytime it has changes to see the modifications.</h5>
 
-<br>
 
 <div ng-app="myApp" ng-controller="myCtrl">
+  <br>
+  <br>
   <form>
     Name: <input type="text" ng-model="name"><br><br>
     Price: <input type="number" min="0" step=".01" ng-model="price"><br><br>
@@ -24,6 +25,7 @@ Don't forget to update the dishes list everytime it has changes to see the modif
   Resultado: {{mensagem}}
 
   <br><br>
+  <h5>Menu List</h5>
   <table cellspacing="8">
     <tr> <th>{{hdishName}}</th>  <th>{{hdishPrice}}</th> <th>{{hdishCusine}}</th></tr>
     <tr ng-repeat="x in dishes">
@@ -33,6 +35,19 @@ Don't forget to update the dishes list everytime it has changes to see the modif
       <td><button ng-click="edit(x)">Edit</button> &nbsp;
       <button ng-click="remove(x)">Remove</button>&nbsp;</td>
       <button ng-click="updateTable()">Update dish list</button> &nbsp;
+
+    </tr>
+  </table>
+
+  <h5>Order List</h5>
+  <button ng-click="updateOrdersTable()">See Order List</button> &nbsp;
+  <table cellspacing="8">
+    <tr> <th>{{hDishOrdered}}</th>  <th>{{hQuantity}}</th></th></tr>
+    <tr ng-repeat="y in orders">
+      <td>{{ y.dish }}</td>
+      <td>{{ y.quantity }}</td>
+      <td><button ng-click="edit(x)">Edit</button> &nbsp;
+      <button ng-click="remove(x)">Remove</button>&nbsp;</td>
 
     </tr>
   </table>
@@ -103,6 +118,28 @@ app.controller('myCtrl', function($scope, $http) {
           } else {
               $scope.clear();
               $scope.mensagem = "234890-=df" ;
+            }
+         }
+      );
+      request.error(function(reply) {
+         alert("Falha na requisicao");
+      }
+    );
+  };
+
+  $scope.updateOrdersTable = function() {
+     var url = "/ordersList";
+     var request = $http({
+                 "method": "get",
+                 "url": url});
+     request.success(function(reply) {
+        if(reply.orders != null) {
+          $scope.hDishOrdered = "Dish";
+          $scope.hQuantity = "Quantity";
+          $scope.orders = reply.orders;
+          } else {
+              $scope.clear();
+              $scope.mensagem = "Null" ;
             }
          }
       );
