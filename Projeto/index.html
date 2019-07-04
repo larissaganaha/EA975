@@ -129,20 +129,6 @@ app.controller('myCtrl', function($scope, $http) {
     request.error(function(reply) {
       alert("OOPS! Something bad Happened");
     })
-
-    // var data = {"name": item.name};
-    // var request = $http({
-    //             "method": "post",
-    //             "url": "/orders",
-    //             "data": data});
-    // request.success(function(reply, status) {
-    //    alert("OK")
-    //    }
-    //  );
-    //  request.error(function(reply, status) {
-    //    alert("Error")
-    //  )
-    // }
   };
 
   $scope.searchByName = function() {

@@ -17,7 +17,7 @@ Don't forget to update the dishes list everytime it has changes to see the modif
     Calories: <input type="number" ng-model="calories"><br><br>
     Nutritional info: <input type="text" ng-model="nutritionInfo"><br><br>
     Cusine: <input type="text" ng-model="cusine"><br><br>
-    <button ng-click="addDish()">ADD NEW DISH</button> &nbsp;
+    <button ng-click="addDish()">Add new dish</button> &nbsp;
 
   </form>
 
@@ -40,7 +40,7 @@ Don't forget to update the dishes list everytime it has changes to see the modif
   </table>
 
   <h5>Order List</h5>
-  <button ng-click="updateOrdersTable()">See Order List</button> &nbsp;
+  <button ng-click="updateOrdersTable()">Update order list</button> &nbsp;
   <table cellspacing="8">
     <tr> <th>{{hDishOrdered}}</th>  <th>{{hQuantity}}</th></th></tr>
     <tr ng-repeat="y in orders">

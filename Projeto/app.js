@@ -416,6 +416,21 @@ router.route('/orders')
     }
   );
 
+  router.route('/orderManager/:order')
+  .delete(function(req, res) {
+      console.log("Removing " + JSON.stringify(req.params));
+      var query = {"dish": req.params.order}
+      var response = {}
+      dishes.findOneAndDelete(query, function(erro, data) {
+        if(erro) response = {"resultado": "falha de acesso ao DB"};
+        else if (data == null) response = {"resultado": "prato inexistente"};
+        else response = {"resultado": "prato removido"};
+        res.json(response)
+        }
+      )
+    }
+  );
+
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários
 .get(function(req, res) {  // GET
