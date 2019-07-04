@@ -81,6 +81,19 @@ function checkAuth(req, res) {
   return 'Unauthorized';
 }
 
+function getUserId(req, res) {
+  cookies = req.cookies;
+  if(! cookies || ! cookies.userAuth) return 'unauthorized';
+  cauth = cookies.userAuth;
+  var content = JSON.parse(cauth);
+  console.log(content);
+  var key = content.key;
+  var role = content.role;
+  var name = content.username;
+  console.log(username);
+  return name
+}
+
 // index.html
 router.route('/')
  .get(function(req, res) {  // GET
@@ -352,6 +365,44 @@ router.route('/editItem')
   }
 );
 
+router.route('/orders')
+.post(function(req, res) {   // POST (cria)
+     // if(checkAuth(req, res) != 'user') {
+     //   res.status(401).send('Unauthorized');
+     //   return;
+     // }
+     // var query = {"userID": req.body.id};
+     // var response = {};
+     // users.findOne(query, function(erro, data) {
+     //    if (data == null) {
+     //       var db = new users();
+	   //       db.username = req.body.username;
+     //       db.password = req.body.password;
+     //       db.id = req.body.id;
+     //       db.orderAmount = req.body.orderAmount;
+     //       db.itemsQuantity = req.body.itemsQuantity;
+	   //       db.order = req.body.order;
+     //       db.role = req.body.role;
+     //
+     //       db.save(function(erro) {
+     //         if(erro) {
+     //             response = {"resultado": "falha de acesso ao BD"};
+     //             res.json(response);
+     //         } else {
+     //             response = {"resultado": "usuário inserido"};
+     //             res.json(response);
+     //          }
+     //        }
+     //      )
+     //    } else {
+	   //  response = {"resultado": "usuário ja existente"};
+     //        res.json(response);
+     //      }
+     //    }
+     //  )
+    }
+  );
+
 // USUÁRIOS
 router.route('/signup')   // operacoes sobre todos os usuários
 .get(function(req, res) {  // GET
@@ -506,8 +557,10 @@ router.route('/authentication')   // autenticação
         if(erro) response = {"resultado": "falha de acesso ao DB"};
         else if (data == null) response = {"resultado": "prato inexistente"};
         else response = data
+        itemToModify = {"name": req.params.dish};
         res.json(response)
         }
+
       )
     }
   );
