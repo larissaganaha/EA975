@@ -421,10 +421,10 @@ router.route('/orders')
       console.log("Removing " + JSON.stringify(req.params));
       var query = {"dish": req.params.order}
       var response = {}
-      dishes.findOneAndDelete(query, function(erro, data) {
-        if(erro) response = {"resultado": "falha de acesso ao DB"};
-        else if (data == null) response = {"resultado": "prato inexistente"};
-        else response = {"resultado": "prato removido"};
+      orders.findOneAndDelete(query, function(erro, data) {
+        if(erro) response = {"result": "error accessing DB"};
+        else if (data == null) response = {"result": "order does not exist"};
+        else response = {"result": "Order removed"};
         res.json(response)
         }
       )

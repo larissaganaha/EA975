@@ -46,8 +46,7 @@ Don't forget to update the dishes list everytime it has changes to see the modif
     <tr ng-repeat="y in orders">
       <td>{{ y.dish }}</td>
       <td>{{ y.quantity }}</td>
-      <td><button ng-click="edit(x)">Edit</button> &nbsp;
-      <button ng-click="remove(x)">Remove</button>&nbsp;</td>
+      <td><button ng-click="removeOrder(y)">Remove</button> &nbsp;</td>
 
     </tr>
   </table>
@@ -186,6 +185,25 @@ app.controller('myCtrl', function($scope, $http) {
      );
      request.error(function(reply) {
         alert("Falha na requisicao");
+       }
+     );
+  };
+
+  $scope.removeOrder = function(item) {
+    $scope.clear();
+    var data = {"dish": item.dish,
+                "quantity": item.quantity};
+    var request = $http({
+                "method": "delete",
+                "url": "/orderManager/" + item.dish,
+                "data": data});
+    request.success(function(reply) {
+          alert("Order removed")
+         $scope.mensagem = reply.result;
+       }
+     );
+     request.error(function(reply) {
+        alert("Failed");
        }
      );
   };
